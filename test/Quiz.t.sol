@@ -17,6 +17,24 @@ contract QuizTest is Test {
        q1 = quiz.getQuiz(1);
     }
 
+    function testAddQuizACL() public {
+        uint quiz_num_before = quiz.getQuizNum();
+        Quiz.Quiz_item memory q;
+        q.id = quiz_num_before + 1;
+        q.question = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        q.answer = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
+        q.min_bet = 1 ether;
+        q.max_bet = 2 ether;
+        vm.prank(address(1));
+        vm.expectRevert();
+        quiz.addQuiz(q);
+    }
+
+    function testGetQuizSecurity() public {
+        Quiz.Quiz_item memory q = quiz.getQuiz(1);
+        assertEq(q.answer, "");
+    }
+
     function testAddQuizGetQuiz() public {
         uint quiz_num_before = quiz.getQuizNum();
         Quiz.Quiz_item memory q;
